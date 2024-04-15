@@ -14,33 +14,18 @@
 - Установка активного и пассивного времени
 - Встроенная PGM таблица на 90 нот (от До контроктавы до Ми пятой октавы)
 
+### Зависимости
+- [GyverBlinker](https://github.com/GyverLibs/GyverBlinker)
+
 ### Совместимость
 Все Arduino
 
 ## Содержание
-- [Установка](#install)
 - [Использование](#usage)
 - [Пример](#example)
 - [Версии](#versions)
+- [Установка](#install)
 - [Баги и обратная связь](#feedback)
-
-<a id="install"></a>
-## Установка
-- Для работы требуется библиотека [GyverBlinker](https://github.com/GyverLibs/GyverBlinker)
-- Библиотеку можно найти по названию **GyverBeeper** и установить через менеджер библиотек в:
-    - Arduino IDE
-    - Arduino IDE v2
-    - PlatformIO
-- [Скачать библиотеку](https://github.com/GyverLibs/GyverBeeper/archive/refs/heads/main.zip) .zip архивом для ручной установки:
-    - Распаковать и положить в *C:\Program Files (x86)\Arduino\libraries* (Windows x64)
-    - Распаковать и положить в *C:\Program Files\Arduino\libraries* (Windows x32)
-    - Распаковать и положить в *Документы/Arduino/libraries/*
-    - (Arduino IDE) автоматическая установка из .zip: *Скетч/Подключить библиотеку/Добавить .ZIP библиотеку…* и указать скачанный архив
-- Читай более подробную инструкцию по установке библиотек [здесь](https://alexgyver.ru/arduino-first/#%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA)
-### Обновление
-- Рекомендую всегда обновлять библиотеку: в новых версиях исправляются ошибки и баги, а также проводится оптимизация и добавляются новые фичи
-- Через менеджер библиотек IDE: найти библиотеку как при установке и нажать "Обновить"
-- Вручную: **удалить папку со старой версией**, а затем положить на её место новую. "Замену" делать нельзя: иногда в новых версиях удаляются файлы, которые останутся при замене и могут привести к ошибкам!
 
 <a id="usage"></a>
 
@@ -69,9 +54,21 @@ void beepNote(uint8_t note);
 // пискнуть нотой amount раз, активное время high, тишина low
 void beepNote(uint8_t note, uint16_t amount, uint16_t high, uint16_t low = 0);
 
+// пискнуть с периодом us (мкс, или нота с префиксом US_), активное время high, тишина low
+void beepUsForever(uint16_t us, uint16_t high, uint16_t low = 0);
+
+// пискнуть с частотой в Гц, активное время high, тишина low
+void beepForever(uint16_t freq, int amount, uint16_t high, uint16_t low = 0);
+
+// пискнуть нотой, активное время high, тишина low
+void beepNoteForever(uint8_t note, uint16_t high, uint16_t low = 0);
+
 bool tick();            // тикер, вызывать в loop. Вернёт true если пищание активно
 void stop();            // остановить работу
 void useTone(bool f);   // использовать реализацию tone вместо ручного таймера (умолч. false)
+
+// true - синхронный режим (блокирующее пищание) для не-tone
+void syncMode(bool f);
 
 // наследует из Blinker:
 void init(uint8_t pin); // указать пин
@@ -105,7 +102,7 @@ void loop() {
 ```cpp
 #include <Beeper.h>
 Beeper buz(13);
-uint8_t notes[] = {NOTE_ASS, NOTE_ASS, NOTE_F3};
+uint8_t notes[] = {NOTE_F4, NOTE_AS1, NOTE_F3};
 uint8_t curNote = 0;
 
 void start() {
@@ -130,8 +127,29 @@ void loop() {
 ```
 
 <a id="versions"></a>
+
 ## Версии
 - v1.0
+- v1.1.0 - ноты переделаны под американскую научную нотацию. Добавлен синхронный режим
+
+<a id="install"></a>
+
+## Установка
+- Для работы требуется библиотека [GyverBlinker](https://github.com/GyverLibs/GyverBlinker)
+- Библиотеку можно найти по названию **GyverBeeper** и установить через менеджер библиотек в:
+    - Arduino IDE
+    - Arduino IDE v2
+    - PlatformIO
+- [Скачать библиотеку](https://github.com/GyverLibs/GyverBeeper/archive/refs/heads/main.zip) .zip архивом для ручной установки:
+    - Распаковать и положить в *C:\Program Files (x86)\Arduino\libraries* (Windows x64)
+    - Распаковать и положить в *C:\Program Files\Arduino\libraries* (Windows x32)
+    - Распаковать и положить в *Документы/Arduino/libraries/*
+    - (Arduino IDE) автоматическая установка из .zip: *Скетч/Подключить библиотеку/Добавить .ZIP библиотеку…* и указать скачанный архив
+- Читай более подробную инструкцию по установке библиотек [здесь](https://alexgyver.ru/arduino-first/#%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0_%D0%B1%D0%B8%D0%B1%D0%BB%D0%B8%D0%BE%D1%82%D0%B5%D0%BA)
+### Обновление
+- Рекомендую всегда обновлять библиотеку: в новых версиях исправляются ошибки и баги, а также проводится оптимизация и добавляются новые фичи
+- Через менеджер библиотек IDE: найти библиотеку как при установке и нажать "Обновить"
+- Вручную: **удалить папку со старой версией**, а затем положить на её место новую. "Замену" делать нельзя: иногда в новых версиях удаляются файлы, которые останутся при замене и могут привести к ошибкам!
 
 <a id="feedback"></a>
 ## Баги и обратная связь
